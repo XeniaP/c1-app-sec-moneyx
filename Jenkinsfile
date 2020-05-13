@@ -32,8 +32,8 @@ node('jenkins-jenkins-slave') {
           findingsThreshold: new groovy.json.JsonBuilder([
             malware: 0,
             vulnerabilities: [
-              defcon1: 10,
-              critical: 100,
+              defcon1: 0,
+              critical: 0,
               high: 100,
               medium: 200,
               low: 100
