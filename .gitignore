@@ -1,0 +1,5 @@
+.env
+work/
+backup-*/
+*.old
+*.zip
