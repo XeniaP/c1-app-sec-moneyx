@@ -10,7 +10,7 @@ phases:
       - openssl s_client -showcerts -connect $SMARTCHECK_HOST:443 < /dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > smcert.crt
       - cp smcert.crt /usr/local/share/ca-certificates/$SMARTCHECK_HOST.crt
       - update-ca-certificates
-      - apt-get update && apt-get -y install jq python3-pip python3-dev envsubst && pip3 install --upgrade awscli
+      - apt-get update && apt-get -y install jq python3-pip python3-dev && pip3 install --upgrade awscli
   pre_build:
     commands:
         - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
