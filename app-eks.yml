@@ -40,5 +40,12 @@ spec:
       - name: c1appsecmoneyx
         image: CONTAINER_IMAGE
         imagePullPolicy: Always
+        env:
+        - name: TREND_AP_KEY
+          value: $APPSEC_KEY
+        - name: TREND_AP_SECRET
+          value: $APPSEC_SECRET
         ports:
         - containerPort: 8080
+      imagePullSecrets:
+      - name: $KUBERNETES_SECRET_NAME
