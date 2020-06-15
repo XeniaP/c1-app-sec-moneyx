@@ -39,7 +39,7 @@ phases:
         --preregistry-user="$PRE_SCAN_USER"
         --preregistry-password="$PRE_SCAN_PWD"
       - $(aws ecr get-login --no-include-email)
-      - docker push $REPOSITORY_URI:$TAG
+      - docker push $REPOSITORY_URI:$TAG 
       - CREDENTIALS=$(aws sts assume-role --role-arn $EKS_KUBECTL_ROLE_ARN --role-session-name codebuild-kubectl --duration-seconds 900)
       - export AWS_ACCESS_KEY_ID="$(echo ${CREDENTIALS} | jq -r '.Credentials.AccessKeyId')"
       - export AWS_SECRET_ACCESS_KEY="$(echo ${CREDENTIALS} | jq -r '.Credentials.SecretAccessKey')"
