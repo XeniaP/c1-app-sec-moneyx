@@ -46,8 +46,9 @@ phases:
       - export AWS_SESSION_TOKEN="$(echo ${CREDENTIALS} | jq -r '.Credentials.SessionToken')"
       - export AWS_EXPIRATION=$(echo ${CREDENTIALS} | jq -r '.Credentials.Expiration')
       - aws eks update-kubeconfig --name $EKS_CLUSTER_NAME
-      - envsubst < app-eks.yml
+      - sed -i s/\$APPSEC_KEY/$APPSEC_KEY/g app-eks.yml
+      - sed -i s/\$APPSEC_SECRET/$APPSEC_SECRET/g app-eks.yml
       - kubectl apply -f app-eks.yml
       - printf '[{"name":"c1-app-sec-moneyx","imageUri":"%s"}]' $REPOSITORY_URI:$TAG > build.json
-artifacts:
-  files: build.json
+artifacts: 
+  files: build.json  
