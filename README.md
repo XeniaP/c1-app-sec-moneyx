@@ -1,6 +1,6 @@
 # c1-app-sec-moneyx
 Sample Java Spring application for Cloud One Application Security demos, build and deployable to kubernetes with Jenkins.
-
+  
 ## Detailed Description
 This is a sample, vulnerable-on-purpose, Java Spring application that can be used to demo Cloud One Application Security.
 
