@@ -16,7 +16,7 @@ phases:
   pre_build:
     commands:
       - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
-      - sed -i 's@CONTAINER_IMAGE@'"$REPOSITORY_URI:$TAG"'@' app-eks.yml
+      - sed -i 's@CONTAINER_IMAGE@'"$REPOSITORY_URI:latest"'@' app-eks.yml
       - $(aws ecr get-login --no-include-email)
       - export KUBECONFIG=$HOME/.kube/config
       - echo "--------------------------------Logging in to docker hub --------------------------------------------------------------"
@@ -29,7 +29,7 @@ phases:
     commands:
       - docker build --tag $REPOSITORY_URI:$TAG .
 
-  post_build: 
+  post_build:
     commands:
       - echo "$REPOSITORY_URI:$TAG"
       - $(aws ecr get-login --no-include-email)
@@ -42,7 +42,7 @@ phases:
         docker run -v /var/run/docker.sock:/var/run/docker.sock
         deepsecurity/smartcheck-scan-action
         --image-name="$REPOSITORY_URI:$TAG"
-        --findings-threshold="{\"malware\":0,\"vulnerabilities\":{\"defcon1\":0,\"critical\":100,\"high\":100},\"contents\":{\"defcon1\":0,\"critical\":0,\"high\":1},\"checklists\":{\"defcon1\":0,\"critical\":0,\"high\":0}}"
+        --findings-threshold="{\"malware\":0,\"vulnerabilities\":{\"defcon1\":0,\"critical\":150,\"high\":150},\"contents\":{\"defcon1\":0,\"critical\":0,\"high\":1},\"checklists\":{\"defcon1\":0,\"critical\":0,\"high\":0}}"
         --preregistry-host="$SMARTCHECK_HOST:5000"
         --smartcheck-host="$SMARTCHECK_HOST"
         --smartcheck-user="$SMARTCHECK_USER"
@@ -53,7 +53,8 @@ phases:
         --preregistry-password="$PRE_SCAN_PWD"
       - $(aws ecr get-login --no-include-email)
       - docker push $REPOSITORY_URI:$TAG
-
+      - docker tag $REPOSITORY_URI:$TAG $REPOSITORY_URI:latest
+      - docker push $REPOSITORY_URI:latest
       - echo 'giving the previous push command some time to settle'
       - sleep 10
 
@@ -61,14 +62,14 @@ phases:
       - >-
         docker run -v /var/run/docker.sock:/var/run/docker.sock
         deepsecurity/smartcheck-scan-action
-        --image-name="$REPOSITORY_URI:$TAG"
-        --findings-threshold="{\"malware\":0,\"vulnerabilities\":{\"defcon1\":0,\"critical\":100,\"high\":100},\"contents\":{\"defcon1\":0,\"critical\":0,\"high\":1},\"checklists\":{\"defcon1\":0,\"critical\":0,\"high\":0}}"
+        --image-name="$REPOSITORY_URI:latest"
+        --findings-threshold="{\"malware\":0,\"vulnerabilities\":{\"defcon1\":0,\"critical\":150,\"high\":150},\"contents\":{\"defcon1\":0,\"critical\":0,\"high\":0},\"checklists\":{\"defcon1\":0,\"critical\":0,\"high\":1}}"
         --smartcheck-host="$SMARTCHECK_HOST"
         --smartcheck-user="$SMARTCHECK_USER"
         --smartcheck-password="$SMARTCHECK_PWD"
         --insecure-skip-tls-verify="true"
         --image-pull-auth="{\"aws\":{\"region\":\"${AWS_REGION}\",\"accessKeyID\":\"${AWS_ACCESS_KEY_ID}\",\"secretAccessKey\":\"${AWS_SECRET_ACCESS_KEY}\"}}"
-  
+      
       - CREDENTIALS=$(aws sts assume-role --role-arn $EKS_KUBECTL_ROLE_ARN --role-session-name codebuild-kubectl --duration-seconds 900)
       - export AWS_ACCESS_KEY_ID="$(echo ${CREDENTIALS} | jq -r '.Credentials.AccessKeyId')"
       - export AWS_SECRET_ACCESS_KEY="$(echo ${CREDENTIALS} | jq -r '.Credentials.SecretAccessKey')"
@@ -77,6 +78,7 @@ phases:
       - aws eks update-kubeconfig --name $EKS_CLUSTER_NAME
       - sed -i s/\$APPSEC_KEY/$APPSEC_KEY/g app-eks.yml
       - sed -i s/\$APPSEC_SECRET/$APPSEC_SECRET/g app-eks.yml
+      - cat app-eks.yml
       - kubectl apply -f app-eks.yml
       - printf '[{"name":"c1-app-sec-moneyx","imageUri":"%s"}]' $REPOSITORY_URI:$TAG > build.json
       - echo "--------------------------------getting current pull-rate state from docker hub----------------------------------------"
@@ -87,3 +89,4 @@ phases:
 
 artifacts:
   files: build.json
+  
