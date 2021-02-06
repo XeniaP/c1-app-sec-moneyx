@@ -4,3 +4,4 @@ backup-*/
 *.old
 *.zipi
 .*
+*.code-workspace

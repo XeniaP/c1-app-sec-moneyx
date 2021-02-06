@@ -36,3 +36,4 @@ docker run --rm -d -p 8080:8080 --name moneyx-app-protect -e TREND_AP_KEY=<KEY> 
 2. Switch Cloud One Application Security rules from "Report" to "Mitigate".
 
 3. Follow the instructions in [exploits.md](exploits.md) again. Demonstrate that the exploits **no longer** work.
+ 
