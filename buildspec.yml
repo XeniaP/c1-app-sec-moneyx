@@ -42,7 +42,7 @@ phases:
         docker run -v /var/run/docker.sock:/var/run/docker.sock
         deepsecurity/smartcheck-scan-action
         --image-name="$REPOSITORY_URI:$TAG"
-        --findings-threshold="{\"malware\":0,\"vulnerabilities\":{\"defcon1\":0,\"critical\":100,\"high\":100},\"contents\":{\"defcon1\":0,\"critical\":0,\"high\":1},\"checklists\":{\"defcon1\":0,\"critical\":0,\"high\":0}}"
+        --findings-threshold="{\"malware\":0,\"vulnerabilities\":{\"defcon1\":0,\"critical\":0,\"high\":0},\"contents\":{\"defcon1\":0,\"critical\":0,\"high\":0},\"checklists\":{\"defcon1\":0,\"critical\":0,\"high\":0}}"
         --preregistry-host="$SMARTCHECK_HOST:5000"
         --smartcheck-host="$SMARTCHECK_HOST"
         --smartcheck-user="$SMARTCHECK_USER"
@@ -53,7 +53,7 @@ phases:
         --preregistry-password="$PRE_SCAN_PWD"
       - $(aws ecr get-login --no-include-email)
       - docker push $REPOSITORY_URI:$TAG
-
+ 
       - echo 'giving the previous push command some time to settle'
       - sleep 10
 
@@ -62,7 +62,7 @@ phases:
         docker run -v /var/run/docker.sock:/var/run/docker.sock
         deepsecurity/smartcheck-scan-action
         --image-name="$REPOSITORY_URI:$TAG"
-        --findings-threshold="{\"malware\":0,\"vulnerabilities\":{\"defcon1\":0,\"critical\":100,\"high\":100},\"contents\":{\"defcon1\":0,\"critical\":0,\"high\":1},\"checklists\":{\"defcon1\":0,\"critical\":0,\"high\":0}}"
+        --findings-threshold="{\"malware\":0,\"vulnerabilities\":{\"defcon1\":0,\"critical\":0,\"high\":0},\"contents\":{\"defcon1\":0,\"critical\":0,\"high\":0},\"checklists\":{\"defcon1\":0,\"critical\":0,\"high\":0}}"
         --smartcheck-host="$SMARTCHECK_HOST"
         --smartcheck-user="$SMARTCHECK_USER"
         --smartcheck-password="$SMARTCHECK_PWD"
