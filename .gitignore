@@ -2,6 +2,14 @@
 work/
 backup-*/
 *.old
-*.zipi
+*.zip
 .*
+*.tmp
+*.bak
+*.pem
+*.key
+
 *.code-workspace
+.remote-sync.json
+
+
