@@ -1,5 +1,5 @@
 # c1-app-sec-moneyx
-Sample Java Spring application for Cloud One Application Security demos, build and deployable to kubernetes with Jenkins.
+Sample Java Spring application running in a container, for Cloud One Application Security demos
   
 ## Detailed Description
 This is a sample, vulnerable-on-purpose, Java Spring application that can be used to demo Cloud One Application Security.
@@ -14,13 +14,8 @@ See:  https://github.com/nVisium/MoneyX
 * A Cloud One Application Security account
 * MOADSD-NG, Jenkins and Kubernetes
 
-### Usage Instructions w/ MOADSD-NG
 
-1. Create the Pipeline within Jenkins
-
-2. Access the demoapp URL provided by MOADSD-NG
-
-### Usage Instructions w/ Docker only
+### Start the container locally 
 
 1. Download and run the container:
 ```
